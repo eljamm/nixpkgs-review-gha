@@ -95,9 +95,9 @@ jobs:
           bash prepare.sh
 
       - name: install nix
-        uses: nixbuild/nix-quick-install-action@v29
+        uses: cachix/install-nix-action@v30
         with:
-          nix_conf: |
+          extra_nix_config: |
             accept-flake-config = true
             build-dir = /nix/var
             experimental-features = nix-command flakes
