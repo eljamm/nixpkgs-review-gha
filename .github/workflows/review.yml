@@ -23,6 +23,10 @@ on:
         required: true
         type: boolean
         default: true
+      pkgs-to-build:
+        description: "Packages to build"
+        required: false
+        type: string
       local-eval:
         description: "Force local eval"
         required: true
@@ -132,8 +136,19 @@ jobs:
 
       - name: run nixpkgs-review
         run: |
+          PKG_ARGS=""
+          if [ -z "$PKGS_TO_BUILD" ]; then
+            echo "::notice::Building all changed packages"
+          else
+            echo "::notice::Building $PKGS_TO_BUILD"
+            for PKG in $PKGS_TO_BUILD; do
+              PKG_ARGS+=" --package $PKG"
+            done
+          fi
+
           nixpkgs-review -- \
             pr ${{ inputs.pr }} \
+            $PKG_ARGS \
             --eval ${{ inputs.local-eval && 'local' || 'auto' }} \
             --no-shell \
             --no-headers \
@@ -142,6 +157,7 @@ jobs:
             || true
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          PKGS_TO_BUILD: "${{ inputs.pkgs-to-build }}"
 
       - name: push results to cache
         if: ${{ inputs.push-to-cache && ((vars.ATTIC_SERVER != '' && vars.ATTIC_CACHE != '') || vars.CACHIX_CACHE != '') }}
