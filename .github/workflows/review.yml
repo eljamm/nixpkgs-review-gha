@@ -86,13 +86,21 @@ jobs:
 
     steps:
       - name: prepare /nix
-        run: sudo mkdir /mnt/nix && sudo mount -m -o bind /mnt/nix /nix
-        if: ${{ matrix.system == 'x86_64-linux' || matrix.system == 'aarch64-linux' }}
+        shell: bash
+        env:
+          CLEAN: "true"
+          BTRFS: "true"
+        run: |
+          curl -o prepare.sh https://raw.githubusercontent.com/JohnRTitor/nixpkgs-review-gha/refs/heads/main/helpers/prepare.sh
+          bash prepare.sh
 
       - name: install nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: nixbuild/nix-quick-install-action@v29
         with:
-          extra-conf: |
+          nix_conf: |
+            accept-flake-config = true
+            build-dir = /nix/var
+            experimental-features = nix-command flakes
             sandbox = true
 
       - name: install packages
