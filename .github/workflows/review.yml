@@ -92,7 +92,7 @@ jobs:
           CLEAN: "true"
           BTRFS: "true"
         run: |
-          curl -o prepare.sh https://raw.githubusercontent.com/JohnRTitor/nixpkgs-review-gha/refs/heads/main/helpers/prepare.sh
+          curl -o prepare.sh https://raw.githubusercontent.com/eljamm/nixpkgs-review-gha/refs/heads/main/helpers/prepare.sh
           bash prepare.sh
 
       - name: install nix
