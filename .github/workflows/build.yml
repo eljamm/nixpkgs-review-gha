@@ -1,0 +1,79 @@
+name: build
+run-name: "build ${{ inputs.packages }}"
+
+permissions: {}
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: "Packages"
+        required: false
+        type: string
+      x86_64-linux:
+        description: "Build on x86_64-linux"
+        required: true
+        type: boolean
+        default: true
+      aarch64-linux:
+        description: "Build on aarch64-linux"
+        required: true
+        type: boolean
+        default: true
+      x86_64-darwin:
+        description: "Build on x86_64-darwin"
+        required: true
+        type: boolean
+        default: true
+      aarch64-darwin:
+        description: "Build on aarch64-darwin"
+        required: true
+        type: boolean
+        default: true
+      upterm:
+        description: "Start upterm session after nix build"
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        system:
+          - x86_64-linux
+          - aarch64-linux
+          - x86_64-darwin
+          - aarch64-darwin
+        exclude:
+          - system: ${{ !inputs.x86_64-linux && 'x86_64-linux' || '' }}
+          - system: ${{ !inputs.aarch64-linux && 'aarch64-linux' || '' }}
+          - system: ${{ !inputs.x86_64-darwin && 'x86_64-darwin' || '' }}
+          - system: ${{ !inputs.aarch64-darwin && 'aarch64-darwin' || '' }}
+    runs-on: >-
+      ${{ (matrix.system == 'x86_64-linux' && 'ubuntu-latest')
+      || (matrix.system == 'aarch64-linux' && 'ubuntu-24.04-arm')
+      || (matrix.system == 'x86_64-darwin' && 'macos-13')
+      || (matrix.system == 'aarch64-darwin' && 'macos-latest') }}
+
+    steps:
+      - name: prepare /nix
+        run: sudo mkdir /mnt/nix && sudo mount -m -o bind /mnt/nix /nix
+        if: ${{ matrix.system == 'x86_64-linux' || matrix.system == 'aarch64-linux' }}
+
+      - name: install nix
+        uses: DeterminateSystems/nix-installer-action@v16
+        with:
+          extra-conf: |
+            sandbox = true
+
+      - name: nix build
+        run: nix build --keep-going -L ${{ inputs.packages }}
+        if: ${{ inputs.packages != '' }}
+
+      - name: start upterm session
+        if: ${{ inputs.upterm }}
+        uses: owenthereal/action-upterm@v1
+        with:
+          limit-access-to-actor: true
