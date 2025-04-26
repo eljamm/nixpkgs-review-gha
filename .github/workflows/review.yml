@@ -287,7 +287,7 @@ jobs:
           cat report.md
           echo report=$(base64 -w0 report.md) >> "$GITHUB_OUTPUT"
           echo success=$(jq -s 'all(.[].result[]; .failed==[])' reports/*.json) >> "$GITHUB_OUTPUT"
-          cat report.md >> $GITHUB_STEP_SUMMARY
+          sed '1s|$| for [#'"$PR_NUMBER"'](https://github.com/NixOS/nixpkgs/pull/'"$PR_NUMBER"')|' report.md >> $GITHUB_STEP_SUMMARY
         env:
           PR_NUMBER: ${{ inputs.pr }}
           FETCH_CMD_X86_64_LINUX: ${{ needs.review.outputs.fetch_cmd_x86_64-linux }}
