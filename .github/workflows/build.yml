@@ -69,8 +69,10 @@ jobs:
             sandbox = true
 
       - name: nix build
-        run: nix build --keep-going -L ${{ inputs.packages }}
+        run: nix build --keep-going -L "$PACKAGES"
         if: ${{ inputs.packages != '' }}
+        env:
+          PACKAGES: ${{ inputs.packages }}
 
       - name: start upterm session
         if: ${{ inputs.upterm }}
