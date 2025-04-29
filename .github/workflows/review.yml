@@ -25,6 +25,11 @@ on:
         required: true
         type: boolean
         default: true
+      darwin-sandbox:
+        description: "Control the sandbox on aarch64-darwin, x86_64-darwin"
+        required: false
+        type: boolean
+        default: true
       pkgs-to-build:
         description: "Packages to build"
         required: false
@@ -102,7 +107,7 @@ jobs:
             accept-flake-config = true
             build-dir = /nix/var
             experimental-features = nix-command flakes
-            sandbox = true
+            sandbox = ${{ inputs.darwin-sandbox && (matrix.os == 'x86_64-darwin' || matrix.os == 'aarch64-darwin') }}
 
       - name: install packages
         run: |
