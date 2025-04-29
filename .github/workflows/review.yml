@@ -44,11 +44,6 @@ on:
         required: true
         type: boolean
         default: false
-      upterm:
-        description: "Start upterm session after nixpkgs-review"
-        required: true
-        type: boolean
-        default: false
       post-result:
         description: "Post Result"
         required: true
@@ -217,12 +212,6 @@ jobs:
           CACHIX_CACHE: ${{ vars.CACHIX_CACHE }}
           CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
           CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
-
-      - name: start upterm session
-        if: ${{ inputs.upterm }}
-        uses: owenthereal/action-upterm@v1
-        with:
-          limit-access-to-actor: true
 
       - name: generate report
         id: report
