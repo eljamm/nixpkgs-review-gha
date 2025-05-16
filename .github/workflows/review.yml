@@ -86,14 +86,18 @@ jobs:
       fetch_cmd_aarch64-darwin: ${{ steps.report.outputs.fetch_cmd_aarch64-darwin }}
 
     steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+        with:
+          path: "gha"
+          persist-credentials: false
+
       - name: prepare /nix
-        shell: bash
         env:
           CLEAN: "true"
           BTRFS: "true"
         run: |
-          curl -o prepare.sh https://raw.githubusercontent.com/eljamm/nixpkgs-review-gha/refs/heads/main/helpers/prepare.sh
-          bash prepare.sh
+          bash ./gha/helpers/prepare.sh
 
       - name: install nix
         uses: cachix/install-nix-action@v30
@@ -115,6 +119,13 @@ jobs:
           args=()
           for pkg in ${pkgs[@]}; do args+=("github:nixos/nixpkgs/nixos-unstable#$pkg"); done
           nix profile install ${args[@]}
+
+      - name: clean up
+        env:
+          CLEAN: "true"
+          BTRFS: "true"
+        run: |
+          bash ./gha/helpers/cleanup.sh
 
       - name: clone nixpkgs
         uses: actions/checkout@v4
