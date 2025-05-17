@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p fuc
 
 case "$RUNNER_OS" in
 Linux)
@@ -23,7 +24,7 @@ Linux)
   ;;
 macOS)
   # This save about 110G disk space, and take about 0.6s
-  sudo rm -rf \
+  sudo rmz -rf \
     /Library/Developer/CoreSimulator \
     /Users/runner/Library/Developer/CoreSimulator
   # Disable MDS service on macOS

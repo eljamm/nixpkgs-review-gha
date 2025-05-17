@@ -1,11 +1,12 @@
-#!/usr/bin/env bash
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p fuc
 
 case "$RUNNER_OS" in
 Linux)
   if [ "$CLEAN" = true ]; then
     echo "Disk clean, before:"
     df -h -x tmpfs
-    sudo rm -rf \
+    sudo rmz -rf \
       /etc/skel/.cargo \
       /etc/skel/.dotnet \
       /etc/skel/.rustup \
@@ -39,7 +40,7 @@ macOS)
   if [ "$CLEAN" = true ]; then
     echo "Disk clean, before:"
     df -h /
-    sudo rm -rf \
+    sudo rmz -rf \
       /Applications/Xcode_* \
       /Library/Developer/CoreSimulator \
       /Library/Frameworks \
