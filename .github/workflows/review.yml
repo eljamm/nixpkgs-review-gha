@@ -111,7 +111,7 @@ jobs:
 
       - name: install packages
         run: |
-          pkgs=(uutils-coreutils-noprefix nixpkgs-review jq fuc)
+          pkgs=(uutils-coreutils-noprefix nixpkgs-review jq)
           if [[ ${{ inputs.push-to-cache && vars.ATTIC_SERVER != '' && vars.ATTIC_CACHE != '' }} = true ]]; then
             pkgs+=(attic-client)
           elif [[ ${{ inputs.push-to-cache && vars.CACHIX_CACHE != '' }} = true ]]; then

@@ -5,7 +5,7 @@ Linux)
   if [ "$CLEAN" = true ]; then
     echo "Disk clean, before:"
     df -h -x tmpfs
-    rmz -f \
+    sudo rm -rf \
       /etc/skel/.cargo \
       /etc/skel/.dotnet \
       /etc/skel/.rustup \
@@ -39,7 +39,7 @@ macOS)
   if [ "$CLEAN" = true ]; then
     echo "Disk clean, before:"
     df -h /
-    rmz -f \
+    sudo rm -rf \
       /Applications/Xcode_* \
       /Library/Developer/CoreSimulator \
       /Library/Frameworks \
@@ -54,7 +54,7 @@ macOS)
     df -h /
   fi
   # This save about 110G disk space, and take about 0.6s
-  rmz -f \
+  sudo rm -rf \
     /Library/Developer/CoreSimulator \
     /Users/runner/Library/Developer/CoreSimulator
   # Disable MDS service on macOS
