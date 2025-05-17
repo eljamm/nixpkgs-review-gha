@@ -126,6 +126,7 @@ jobs:
           CLEAN: "true"
           BTRFS: "true"
         run: |
+          nix profile install fuc
           ./gha/helpers/cleanup.sh
 
       - name: clone nixpkgs
