@@ -1,12 +1,11 @@
-#!/usr/bin/env nix-shell
-#!nix-shell -i bash -p fuc
+#!/usr/bin/env bash
 
 case "$RUNNER_OS" in
 Linux)
   if [ "$CLEAN" = true ]; then
     echo "Disk clean, before:"
     df -h -x tmpfs
-    sudo rmz -rf \
+    rmz -f \
       /etc/skel/.cargo \
       /etc/skel/.dotnet \
       /etc/skel/.rustup \
@@ -40,7 +39,7 @@ macOS)
   if [ "$CLEAN" = true ]; then
     echo "Disk clean, before:"
     df -h /
-    sudo rmz -rf \
+    rmz -f \
       /Applications/Xcode_* \
       /Library/Developer/CoreSimulator \
       /Library/Frameworks \
@@ -55,7 +54,7 @@ macOS)
     df -h /
   fi
   # This save about 110G disk space, and take about 0.6s
-  sudo rmz -rf \
+  rmz -f \
     /Library/Developer/CoreSimulator \
     /Users/runner/Library/Developer/CoreSimulator
   # Disable MDS service on macOS

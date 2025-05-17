@@ -111,7 +111,7 @@ jobs:
 
       - name: install packages
         run: |
-          pkgs=(uutils-coreutils-noprefix nixpkgs-review jq)
+          pkgs=(uutils-coreutils-noprefix nixpkgs-review jq fuc)
           if [[ ${{ inputs.push-to-cache && vars.ATTIC_SERVER != '' && vars.ATTIC_CACHE != '' }} = true ]]; then
             pkgs+=(attic-client)
           elif [[ ${{ inputs.push-to-cache && vars.CACHIX_CACHE != '' }} = true ]]; then
@@ -125,8 +125,8 @@ jobs:
         env:
           CLEAN: "true"
           BTRFS: "true"
+        shell: bash
         run: |
-          nix profile install fuc
           ./gha/helpers/cleanup.sh
 
       - name: clone nixpkgs
