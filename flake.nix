@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:eljamm/nixpkgs?ref=gdscript-formatter-test";
     nixpkgs-review.url = "github:Mic92/nixpkgs-review";
   };
 
