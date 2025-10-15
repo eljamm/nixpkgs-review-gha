@@ -70,6 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          persist-credentials: false
           sparse-checkout: .github/actions
 
       - name: setup nix
@@ -85,8 +86,10 @@ jobs:
             || 'true' }}
 
       - name: nix build
-        run: nix build --keep-going -L ${{ inputs.packages }}
+        run: nix build --keep-going -L $PACKAGES
         if: ${{ inputs.packages != '' }}
+        env:
+          PACKAGES: ${{ inputs.packages }}
 
       - name: set GITHUB_TOKEN
         if: ${{ inputs.upterm }}
