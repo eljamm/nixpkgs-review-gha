@@ -47,7 +47,7 @@ runs:
           /Users/runner/hostedtoolcache &
 
     - name: install nix
-      uses: cachix/install-nix-action@fd24c48048070c1be9acd18c9d369a83f0fe94d7 # v31.8.1
+      uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31.9.0
       with:
         # Putting build-dir in /nix is a workaround for https://github.com/wimpysworld/nothing-but-nix/issues/18
         extra_nix_config: |
@@ -63,7 +63,7 @@ runs:
 
     - name: post setup-nix
       if: runner.os == 'macOS'
-      uses: srz-zumix/post-run-action@2bf288bc024acd0341914f792a811080ebd0f252 # v2.2.0
+      uses: srz-zumix/post-run-action@93bf769fcf905a0d721a55a23a36298815b5c1af # v2.3.0
       with:
         shell: bash -e {0}
         post-run: |
