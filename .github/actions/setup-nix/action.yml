@@ -71,7 +71,7 @@ runs:
         sudo chmod 400 /etc/nix/ssh_id{,-cert.pub}
 
     - name: install nix
-      uses: cachix/install-nix-action@v31
+      uses: cachix/install-nix-action@616559265b40713947b9c190a8ff4b507b5df49b # v31.10.4
       with:
         # Putting build-dir in /nix is a workaround for https://github.com/wimpysworld/nothing-but-nix/issues/18
         extra_nix_config: |
@@ -89,7 +89,7 @@ runs:
 
     - name: post setup-nix
       if: runner.os == 'macOS'
-      uses: srz-zumix/post-run-action@v3
+      uses: srz-zumix/post-run-action@1a8fae7b66af5af138983031ee58347f76513293 # v3.0.1
       with:
         shell: bash -e {0}
         post-run: |
