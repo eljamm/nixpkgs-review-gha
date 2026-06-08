@@ -6,10 +6,23 @@ permissions: {}
 on:
   workflow_dispatch:
     inputs:
+      flake_ref:
+        description: "Flake reference prefix for packages (e.g. github:nixos/nixpkgs)"
+        required: false
+        type: string
       packages:
         description: "Packages"
         required: false
         type: string
+      extra_flags:
+        description: "Extra flags to pass to nix build (e.g. --impure --refresh)"
+        required: false
+        type: string
+      allow_unfree:
+        description: "Allow unfree packages"
+        required: true
+        type: boolean
+        default: false
       x86_64-linux:
         description: "Build on x86_64-linux"
         required: true
@@ -90,11 +103,21 @@ jobs:
           ssh-cert: ${{ (vars.USE_BUILDERS == 'yes' || vars.USE_BUILDERS == 'always') && secrets.SSH_CERT || '' }}
 
       - name: nix build
-        run: nix build --keep-going -L $PACKAGES
+        run: |
+          PKGS="$PACKAGES"
+          if [ -n "$FLAKE_REF" ]; then
+            PKGS=""
+            for PKG in $PACKAGES; do
+              PKGS="$PKGS $FLAKE_REF#$PKG"
+            done
+          fi
+          nix build --keep-going -L $PKGS $EXTRA_FLAGS
         if: ${{ inputs.packages != '' }}
-
         env:
           PACKAGES: ${{ inputs.packages }}
+          FLAKE_REF: ${{ inputs.flake_ref }}
+          EXTRA_FLAGS: ${{ inputs.extra_flags }} ${{ inputs.allow_unfree && '--impure' || '' }}
+          NIXPKGS_ALLOW_UNFREE: ${{ inputs.allow_unfree && '1' || '' }}
       - name: set GITHUB_TOKEN
         if: ${{ inputs.upterm }}
         run: echo "GITHUB_TOKEN=${GITHUB_TOKEN}" >> "$GITHUB_ENV"
